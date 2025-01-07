@@ -1,4 +1,4 @@
-# 云应用示例项目 - 上传文件到 COS & 调用云 API
+# 云应用示例 - 自定义应用权限策略
 
 本示例演示了通过 `role.policy` 声明权限策略，并验证权限策略的效果。同时说明了在应用中 [调用云 API](https://cloud.tencent.com/document/product/1689/109427) 的方法。
 
