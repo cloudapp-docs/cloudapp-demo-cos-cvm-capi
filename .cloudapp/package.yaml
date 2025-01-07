@@ -1,0 +1,85 @@
+id: ${packageId}
+
+# 自定义安装参数，通过 widget 来声明安装表单获取
+args:
+  - name: app_main_subnet
+    label: 私有网络
+    widget: subnet-select
+
+  - name: app_clb_sg
+    label: 安全组
+    widget: security-group-select
+    regions:
+      - ${app_main_subnet.region}
+    validator:
+      - eq:
+          a: ${app_clb_sg.region}
+          b: ${app_main_subnet.region}
+          message: 安全组地域与安装网络地域不同
+
+  - name: cvm_instance_quality
+    label: 应用服务器机型
+    widget: cvm-instance-type-select
+    region: ${app_main_subnet.region}
+    zone: ${app_main_subnet.subnet.zone}
+    chargeType: "POSTPAID_BY_HOUR"
+    incompleteTips: 请先选择安装目标地域
+
+  # - name: app_image
+  #   label: 镜像选择
+  #   widget: image-select
+  #   region: ${app_main_subnet.region}
+  #   platforms:
+  #     - Debian
+  #   instanceType: ${cvm_instance_quality.instance_type}
+
+  - name: app_cos
+    widget: cos-bucket-select
+    label: 有权限操作的对象存储
+
+  - name: app_cos_invalidate
+    widget: cos-bucket-select
+    label: 无权限操作的对象存储
+
+
+specs:
+  - key: version
+    name: 版本
+    enum:
+      - value: standard
+        name: 标准版
+      - value: advanced
+        name: 高级版
+      - value: enterprise
+        name: 企业版
+    
+
+role:
+  policy:
+    version: "2.0"
+    statement:
+      # 权限 1：支持 LICENSE 校验
+      - action:
+          - clb:DescribeLoadBalancerOverview
+          - cloudapp:VerifyLicense 
+        resource: "*"
+        effect: allow
+
+      # 权限 2：支持重启应用实例标签下的 CVM
+      - action:
+          - cvm:RebootInstances
+          - cvm:DescribeInstances
+        resource: "*"
+        condition:
+          "for_any_value:string_equal":
+             "qcs:tag":
+                - "CloudappId&${cloudapp_id}"
+        effect: "allow"
+      
+      # 权限 3：支持访问安装时选中的 COS 存储桶
+      - action:
+          - "cos:*"
+        resource:
+          - "qcs::cos:${app_cos.region}:uid/${app_cos.app_id}:${app_cos.bucket}/*"
+          - "qcs::cos:${app_cos.region}:uid/${app_cos.app_id}:${app_cos.bucket}/"
+        effect: allow
