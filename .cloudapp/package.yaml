@@ -65,9 +65,8 @@ role:
         resource: "*"
         effect: allow
 
-      # 权限 2：支持重启应用实例标签下的 CVM
+      # 权限 2：支持查询标签下的 CVM 实例列表
       - action:
-          - cvm:RebootInstances
           - cvm:DescribeInstances
         resource: "*"
         condition:

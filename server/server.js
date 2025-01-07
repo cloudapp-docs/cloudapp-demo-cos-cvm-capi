@@ -37,9 +37,39 @@ function main() {
       cosBucketInvalidate: process.env.INVALIDATE_COS_BUCKET,
       region: process.env.REGION,
     }})
-  })
+  });
 
-  app.use('/api', async (req, res) => {
+  app.use('/api/DescribeInstances', async (req, res) => {
+    try {
+      const credential = await getCredential();
+      console.log('credential', credential);
+
+      const {
+        TmpSecretId: secretId,
+        TmpSecretKey: secretKey,
+        Token: token,
+      } = credential;
+
+      const cvm = new tencentcloud.cvm.v20170312.Client({
+        credential: { secretId, secretKey, token },
+        region: 'ap-guangzhou',
+        profile: {
+          httpProfile: {
+            endpoint: 'cvm.internal.tencentcloudapi.com',
+            protocol: 'https://',
+          },
+        },
+      });
+
+      const instances = await cvm.DescribeInstances();
+      res.send({ Response: instances });
+    } catch (err) {
+      const { message: Message } = err || { message: '发生未知错误' };
+      res.status(500).send({ Error: { Message } });
+    }
+  });
+
+  app.use('/api/GetLoadBalanceOverview', async (req, res) => {
     try {
       const credential = await getCredential();
       console.log('credential', credential);

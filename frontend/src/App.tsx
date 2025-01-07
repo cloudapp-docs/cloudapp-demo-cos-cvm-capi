@@ -1,7 +1,7 @@
 import 'tea-component/dist/tea.css';
 
 import React, { useEffect, useState } from 'react';
-import { Button, Card, Col, MetricsBoard, Row } from 'tea-component';
+import { Button, Card, Col, List, MetricsBoard, Row } from 'tea-component';
 import { SingleFileUpload } from './SingleFileUpload';
 
 export default function App() {
@@ -11,9 +11,16 @@ export default function App() {
     IsolationCount: '-',
     WillExpireCount: '-',
   });
+
+  const [instances, setInstances] = useState<any[]>();
+
   useEffect(() => {
     fetch('/api/GetLoadBalanceOverview').then((x) => {
-      console.log('x: ', x);
+      console.log('clb balance x: ', x);
+    });
+
+    fetch('/api/DescribeInstances').then((x) => {
+      console.log('cvm instances x: ', x);
     });
   }, []);
 
@@ -42,6 +49,16 @@ export default function App() {
             />
           </Col>
         </Row>
+      </Card.Body>
+
+      <Card.Body title='CVM 实例列表'>
+        <List>
+        {
+          instances?.map(instance => (
+            <List.Item>{`${instance.InstanceId} ${instance.InstanceName}`}</List.Item>
+          ))
+        }
+        </List>
       </Card.Body>
 
       <Card.Body title="文件上传">
