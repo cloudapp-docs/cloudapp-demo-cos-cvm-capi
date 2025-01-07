@@ -5,15 +5,15 @@
 ## 目录说明
 - [.cloudapp](.cloudapp) 云应用应用包根目录
   - [infrastructure](.cloudapp/infrastructure) 资源及变量定义目录
-    - variable.tf 变量定义
-    - deployment.tf 资源定义
-    - provider.tf 全局公共参数（固定不变）
+    - [variable.tf](.cloudapp/infrastructure/variable.tf) 变量定义
+    - [deployment.tf](.cloudapp/infrastructure/deployment.tf) 资源定义
+    - [provider.tf](.cloudapp/infrastructure/provider.tf) 全局公共参数（固定不变）
   - [package.yaml](.cloudapp/package.yaml)  云应用配置文件
 - [server](./server) 服务端代码，用于当前示例演示
 - [frontend](./frontend) 前端代码，用于当前示例演示
 - [sh](./sh) CVM 注入的 shell 脚本源码，镜像中已存在
-  - init.sh 应用初始化脚本，对应镜像中的 `/root/init/init.sh`
-  - install.sh 安装 docker 环境
+  - [init.sh](./sh/init.sh) 应用初始化脚本，对应镜像中的 `/root/init/init.sh`
+  - [install.sh](./sh/install.sh) 安装 docker 环境
 
 ## 准备工作
 
