@@ -41,19 +41,8 @@ args:
     widget: cos-bucket-select
     label: 无权限操作的对象存储
 
-
-specs:
-  - key: version
-    name: 版本
-    enum:
-      - value: standard
-        name: 标准版
-      - value: advanced
-        name: 高级版
-      - value: enterprise
-        name: 企业版
     
-
+# 声明运行时角色的权限
 role:
   policy:
     version: "2.0"
@@ -82,3 +71,16 @@ role:
           - "qcs::cos:${var.app_cos.region}:uid/${var.app_cos.app_id}:${var.app_cos.bucket}/*"
           - "qcs::cos:${var.app_cos.region}:uid/${var.app_cos.app_id}:${var.app_cos.bucket}/"
         effect: allow
+
+
+# 声明开发版的规格信息
+specs:
+  - key: version
+    name: 版本
+    enum:
+      - value: standard
+        name: 标准版
+      - value: advanced
+        name: 高级版
+      - value: enterprise
+        name: 企业版
