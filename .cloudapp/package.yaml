@@ -72,13 +72,13 @@ role:
         condition:
           "for_any_value:string_equal":
              "qcs:tag":
-                - "CloudappId&${cloudapp_id}"
+                - "CloudappId&${var.cloudapp_id}"
         effect: "allow"
       
       # 权限 3：支持访问安装时选中的 COS 存储桶
       - action:
           - "cos:*"
         resource:
-          - "qcs::cos:${app_cos.region}:uid/${app_cos.app_id}:${app_cos.bucket}/*"
-          - "qcs::cos:${app_cos.region}:uid/${app_cos.app_id}:${app_cos.bucket}/"
+          - "qcs::cos:${var.app_cos.region}:uid/${var.app_cos.app_id}:${var.app_cos.bucket}/*"
+          - "qcs::cos:${var.app_cos.region}:uid/${var.app_cos.app_id}:${var.app_cos.bucket}/"
         effect: allow
